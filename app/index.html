@@ -1,0 +1,116 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Isfahan</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <!-- build:css styles/vendor.css -->
+  <!-- bower:css -->
+
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:css(.tmp) styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- endbuild -->
+</head>
+<body>
+  <!--[if lt IE 10]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+  <div id="container">
+  </div>
+
+
+  <!-- build:js scripts/vendor.js -->
+  <!-- bower:js -->
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/d3/d3.min.js"></script>
+  <!-- endbower -->
+  <!-- endbuild -->
+
+  <!-- build:js({app,.tmp}) scripts/main.js -->
+  <script src="scripts/main.js"></script>
+  <script>
+    var layoutInput = {
+      "children":[
+        {
+        "type":"column",
+        "slot":true,
+        "size": 3
+
+      },
+      {
+        "type":"column",
+        "size": 1,
+        "children":[
+          {
+          "type":"row",
+          "children":[
+            {
+            "type":"column",
+            "size": 2,
+            "slot":true
+          },
+          {
+            "type":"column",
+            "size": 5,
+            "slot":true
+          }
+          ]
+        },
+        {
+          "type":"row",
+          "size": 4,
+          "slot":true
+        },
+        {
+          "type":"row",
+          "size": 1,
+          "slot":true
+        }]
+      }
+      ],
+      "label":"Reference",
+      "iconClass":"th-list"
+    };
+
+    var windowingSystem = Isfahan({
+      containerSelector: '#container',
+      layoutDescription: layoutInput,
+      configuration: null
+    });
+
+    var w = window.innerWidth,
+    h = window.innerHeight,
+    color = d3.scale.category20c();
+
+    var windowing = windowingSystem
+    .value(function(d) { return 1; });
+
+    var div = d3.select("#container").append("div")
+    .style("position", "relative")
+    .style("width", w + "px")
+    .style("height", h + "px");
+
+    div.data(layoutInput).selectAll("div")
+    .data(windowingSystem)
+    .enter().append("div")
+    .attr("class", "cell")
+    .call(cell);
+
+    function cell() {
+      this
+      .style("left", function(d) { return d.x + "px"; })
+      .style("top", function(d) { return d.y + "px"; })
+      .style("width", function(d) { return Math.max(0, d.dx ) + "px"; })
+      .style("height", function(d) { return Math.max(0, d.dy ) + "px"; });
+    }
+  </script>
+  <!-- endbuild -->
+</body>
+</html>
