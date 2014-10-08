@@ -11,7 +11,6 @@
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
   <!-- build:css styles/vendor.css -->
   <!-- bower:css -->
-
   <!-- endbower -->
   <!-- endbuild -->
   <!-- build:css(.tmp) styles/main.css -->
@@ -36,52 +35,149 @@
   <!-- build:js({app,.tmp}) scripts/main.js -->
   <script src="scripts/main.js"></script>
   <script>
+    var singleNested = {
+      "children":[
+          {
+          "type":"row",
+          "children":[
+            {
+            "type":"column",
+            "children":[
+              {
+              "type":"row",
+              "children":[
+                {
+                "type":"column",
+                "children":[
+                  {
+                  "type":"column",
+                },
+                {
+                  "type":"column",
+                },
+                {
+                  "type":"column",
+                }]
+              },
+              {
+                "type":"column",
+              },
+              {
+                "type":"column",
+              }]
+            },
+            {
+              "type":"column",
+            },
+            {
+              "type":"column",
+            }]
+          },
+          {
+            "type":"column",
+          },
+          {
+            "type":"column",
+          }]
+        },
+          {
+          "type":"row",
+          "children":[
+            {
+            "type":"column",
+          },
+          {
+            "type":"column",
+          },
+          {
+            "type":"column",
+        }]
+      }]
+    };
+
+    var threeBythree = {
+      "children":[
+        {
+        "type":"column",
+        "children":[
+          {
+          "type":"row",
+        },
+        {
+          "type":"row",
+        },
+        {
+          "type":"row",
+        }]
+      }
+      ,{
+        "type":"column",
+        "children":[
+          {
+          "type":"row",
+        },
+        {
+          "type":"row",
+          "children":[
+            {
+            "type":"column",
+          },
+          {
+            "type":"column",
+          }]
+        },
+        {
+          "type":"row",
+        }]
+      },
+      {
+        "type":"column",
+        "children":[
+          {
+          "type":"row",
+        },
+        {
+          "type":"row",
+        },
+        {
+          "type":"row",
+        }]
+      }]
+    }
+
     var layoutInput = {
       "children":[
         {
         "type":"column",
-        "slot":true,
-        "size": 3
-
       },
       {
         "type":"column",
-        "size": 1,
         "children":[
           {
           "type":"row",
           "children":[
             {
             "type":"column",
-            "size": 2,
-            "slot":true
           },
           {
             "type":"column",
-            "size": 5,
-            "slot":true
-          }
-          ]
+          }]
         },
         {
           "type":"row",
-          "size": 4,
-          "slot":true
         },
         {
           "type":"row",
-          "size": 1,
-          "slot":true
         }]
       }
-      ],
+        ],
       "label":"Reference",
       "iconClass":"th-list"
     };
 
     var windowingSystem = Isfahan({
-      containerSelector: '#container',
-      layoutDescription: layoutInput,
+      containerId: 'container',
+      layoutDescription: singleNested,
       configuration: null
     });
 
@@ -89,18 +185,16 @@
     h = window.innerHeight,
     color = d3.scale.category20c();
 
-    var windowing = windowingSystem
-    .value(function(d) { return 1; });
+    // var windowing = windowingSystem
+    // .size([w,h])
+    // .value(function(d) { return 1; });
 
-    var div = d3.select("#container").append("div")
-    .style("position", "relative")
-    .style("width", w + "px")
-    .style("height", h + "px");
-
-    div.data(layoutInput).selectAll("div")
-    .data(windowingSystem)
+    d3.select("#container").selectAll("div")
+    .data(windowingSystem.filter( function(d) {
+     return !d.children;
+    }))
     .enter().append("div")
-    .attr("class", "cell")
+    .attr("class", "tileWindow")
     .call(cell);
 
     function cell() {

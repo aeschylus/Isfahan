@@ -35,13 +35,15 @@ body, html {
 #container {
   height: 100%;
   width: 100%;
-  border: 2px solid orangered;
-  box-sizing: border-box;
+  /* border: 2px solid orangered; */
+  /* box-sizing: border-box; */
   position: relative;
 }
 
 .tileWindow {
   position: absolute;
   box-sizing: border-box;
-  border: 2px dashed #333;
+  border: 1px solid #333;
+  background-color: linen;
 }
+
