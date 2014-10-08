@@ -37,7 +37,6 @@ var Isfahan = function(configObject) {
   // Positions the specified row of nodes. Modifies `rect`.
   function position(group, type, rect) {
     console.log(type);
-    console.log(rect);
     var i = -1,
         n = group.length,
         x = rect.x,
