@@ -20,7 +20,6 @@ var Isfahan = function(configObject) {
       remaining = children.slice(), // copy-on-write
       child,
       n;
-      console.log(rect);
       
       while ((n = remaining.length) > 0) {
         group.push(child = remaining[n - 1]);
@@ -33,7 +32,7 @@ var Isfahan = function(configObject) {
   
   // Positions the specified row of nodes. Modifies `rect`.
   function position(group, type, rect) {
-    console.log(type);
+    console.log('%c\n'+' parent ' + type + ' rect is: ', 'background: #222; color: #EFEFEF; font-family: helvetica neue; font-size:20px; padding: 0 7px 3px 0;');
     console.log(rect);
     var i = -1,
         n = group.length,
@@ -41,20 +40,24 @@ var Isfahan = function(configObject) {
         y = rect.y,
         o;
     if (type === "column") { // vertical subdivision (children are rows)
+      console.log('\n'+'calculating child rows');
       while (++i < n) {
         o = group[n-(i+1)];
         o.x = x;
-        o.y = (rect.dy/n) * i; // TODO: adjust to siblings.
+        o.y = y + (rect.dy/n) * i; // TODO: adjust to siblings.
         o.dx = rect.dx;
         o.dy = rect.dy/n;
+        console.log({x:o.x, y: o.y, width:o.dx, height: o.dy});
       }
     } else { // horizontal subdivision (children are columns)
+      console.log('\n'+'calculating child columns');
       while (++i < n) {
         o = group[n-(i+1)];
-        o.x = (rect.dx/n) * i; // TODO: adjust to siblings.
+        o.x = x + (rect.dx/n) * i; // TODO: adjust to siblings.
         o.y = y;
         o.dx = rect.dx/n;
         o.dy = rect.dy;
+        console.log({x:o.x, y: o.y, width:o.dx, height: o.dy});
       }
     }
   }
