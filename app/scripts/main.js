@@ -12,7 +12,6 @@ var Isfahan = function(configObject) {
 
   function calculateLayout(node) {
     var children = node.children;
-    node.type = node.type ? node.type : (children[0].type === "column" ? "row" : "column");
 
     if (children && children.length) {
       var rect = pad(node),
@@ -21,15 +20,13 @@ var Isfahan = function(configObject) {
       remaining = children.slice(), // copy-on-write
       child,
       n;
+      console.log(rect);
       
       while ((n = remaining.length) > 0) {
         group.push(child = remaining[n - 1]);
         remaining.pop();
       }
-      if (group.length) {
-        position(group, node.type, rect);
-        group.length = 0;
-      }
+      position(group, node.type, rect);
       children.forEach(calculateLayout);
     }
   }
@@ -37,6 +34,7 @@ var Isfahan = function(configObject) {
   // Positions the specified row of nodes. Modifies `rect`.
   function position(group, type, rect) {
     console.log(type);
+    console.log(rect);
     var i = -1,
         n = group.length,
         x = rect.x,
@@ -44,7 +42,7 @@ var Isfahan = function(configObject) {
         o;
     if (type === "column") { // vertical subdivision (children are rows)
       while (++i < n) {
-        o = group[i];
+        o = group[n-(i+1)];
         o.x = x;
         o.y = (rect.dy/n) * i; // TODO: adjust to siblings.
         o.dx = rect.dx;
@@ -52,7 +50,7 @@ var Isfahan = function(configObject) {
       }
     } else { // horizontal subdivision (children are columns)
       while (++i < n) {
-        o = group[i];
+        o = group[n-(i+1)];
         o.x = (rect.dx/n) * i; // TODO: adjust to siblings.
         o.y = y;
         o.dx = rect.dx/n;
@@ -90,14 +88,15 @@ var Isfahan = function(configObject) {
   isfahan.round = function(x) {
     if (!arguments.length) return round != Number;
     round = x ? Math.round : Number;
-    return treemap;
+    return isfahan;
   };
   
   isfahan.padding = function(x) {
     if (!arguments.length) return padding;
 
     function padFunction(node) {
-      var p = x.call(treemap, node, node.depth);
+      var p = x.call(isfahan, node, node.depth);
+      console.log(p);
       return p == null
           ? d3_layout_cellPadNull(node)
           : d3_layout_cellPad(node, typeof p === "number" ? [p, p, p, p] : p);
@@ -112,7 +111,7 @@ var Isfahan = function(configObject) {
         : (type = typeof x) === "function" ? padFunction
         : type === "number" ? (x = [x, x, x, x], padConstant)
         : padConstant;
-    return treemap;
+    return isfahan;
   };
 
   function d3_layout_cellPadNull(node) {

@@ -36,7 +36,21 @@
   <script src="scripts/main.js"></script>
   <script>
     var singleNested = {
+      "type": "column",
       "children":[
+        {
+          "type":"row",
+          "children":[
+            {
+            "type":"column",
+          },
+          {
+            "type":"column",
+          },
+          {
+            "type":"column",
+          }]
+        },
           {
           "type":"row",
           "children":[
@@ -79,20 +93,7 @@
           {
             "type":"column",
           }]
-        },
-          {
-          "type":"row",
-          "children":[
-            {
-            "type":"column",
-          },
-          {
-            "type":"column",
-          },
-          {
-            "type":"column",
         }]
-      }]
     };
 
     var threeBythree = {
@@ -139,6 +140,7 @@
     }
 
     var layoutInput = {
+      "type": "row",
       "children":[
         {
         "type":"column",
@@ -162,17 +164,11 @@
         {
           "type":"row",
         }]
-      }
-        ],
+      }],
       "label":"Reference",
       "iconClass":"th-list"
     };
 
-    var windowingSystem = Isfahan({
-      containerId: 'container',
-      layoutDescription: layoutInput,
-      configuration: null
-    });
 
     var w = window.innerWidth,
     h = window.innerHeight,
@@ -182,20 +178,54 @@
     // .size([w,h])
     // .value(function(d) { return 1; });
 
-    d3.select("#container").selectAll("div")
-    .data(windowingSystem.filter( function(d) {
-     return !d.children;
-    }))
-    .enter().append("div")
-    .attr("class", "tileWindow")
-    .call(cell);
+    function update(data) {
+      var windowingSystem = Isfahan({
+        containerId: 'container',
+        layoutDescription: data,
+        configuration: null
+      });
 
-    function cell() {
-      this
-      .style("left", function(d) { return d.x + "px"; })
-      .style("top", function(d) { return d.y + "px"; })
-      .style("width", function(d) { return Math.max(0, d.dx ) + "px"; })
-      .style("height", function(d) { return Math.max(0, d.dy ) + "px"; });
+      windowingSystem.forEach(function(item){
+        item.id = Math.floor(Math.random()*20000);
+      })
+
+      data = windowingSystem.filter( function(d) {
+        return !d.children;
+      });
+
+      console.log(data);
+
+      // Data Join.
+      var divs = d3.select("#container").selectAll("div")
+      .data(data, function(d) { return d.id; });
+
+      divs.call(cell);
+
+      // Enter
+      divs.enter().append("div")
+      .attr("class", "tileWindow")
+      .call(cell);
+
+      divs.exit()
+        .transition()
+        .duration(750)
+        .style('width', 0+'px')
+        .remove("div");
+
+      function cell() {
+        this
+        .style("left", function(d) { return d.x + "px"; })
+        .style("top", function(d) { return d.y + "px"; })
+        .style("width", function(d) { return Math.max(0, d.dx ) + "px"; })
+        .style("height", function(d) { return Math.max(0, d.dy ) + "px"; });
+      }
+    }
+    update(layoutInput);
+
+    function changeIt() {
+      var options = [threeBythree, layoutInput, singleNested],
+      option = options[Math.floor(Math.random() * 3)]; 
+      update(option);
     }
   </script>
   <!-- endbuild -->

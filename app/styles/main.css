@@ -43,7 +43,7 @@ body, html {
 .tileWindow {
   position: absolute;
   box-sizing: border-box;
-  border: 1px solid #333;
   background-color: linen;
+  box-shadow: inset 0 0 25px black;
 }
 
