@@ -38,27 +38,20 @@
     var singleNested = {
       "type": "column",
       "children":[
+        {
+        "type":"row",
+        "children":[
           {
-          "type":"row",
+          "type":"column",
           "children":[
             {
-            "type":"column",
+            "type":"row",
             "children":[
               {
-              "type":"row",
+              "type":"column",
               "children":[
                 {
                 "type":"column",
-                "children":[
-                  {
-                  "type":"column",
-                },
-                {
-                  "type":"column",
-                },
-                {
-                  "type":"column",
-                }]
               },
               {
                 "type":"column",
@@ -82,18 +75,25 @@
           }]
         },
         {
-          "type":"row",
-          "children":[
-            {
-            "type":"column",
-          },
+          "type":"column",
+        },
+        {
+          "type":"column",
+        }]
+      },
+      {
+        "type":"row",
+        "children":[
           {
-            "type":"column",
-          },
-          {
-            "type":"column",
-          }]
-        }
+          "type":"column",
+        },
+        {
+          "type":"column",
+        },
+        {
+          "type":"column",
+        }]
+      }
       ]
     };
 
@@ -164,6 +164,26 @@
         },
         {
           "type":"row",
+          "children":[
+            {
+            "type":"column",
+            "children":[
+              {
+              "type":"column",
+            },
+            {
+              "type":"column",
+            },
+            {
+              "type":"column",
+            }]
+          },
+          {
+            "type":"column",
+          },
+          {
+            "type":"column",
+          }]
         },
         {
           "type":"row",
@@ -186,17 +206,20 @@
       var windowingSystem = Isfahan({
         containerId: 'container',
         layoutDescription: data,
-        configuration: null
+        configuration: null,
+        padding: 7 
       });
 
       windowingSystem.forEach(function(item){
         item.id = Math.floor(Math.random()*20000);
       })
 
+      console.log('data before filter: ');
+      console.log(data);
       data = windowingSystem.filter( function(d) {
         return !d.children;
       });
-
+      console.log('data after filter: ');
       console.log(data);
 
       // Data Join.
@@ -211,19 +234,23 @@
       .call(cell);
 
       divs.exit()
-        .transition()
-        .duration(750)
-        .style('width', 0+'px')
-        .remove("div");
+      .transition()
+      .duration(750)
+      .style('width', 0+'px')
+      .style('height', 0+'px')
+      .remove("div");
 
       function cell() {
         this
+      .transition()
+        .duration(750)
         .style("left", function(d) { return d.x + "px"; })
         .style("top", function(d) { return d.y + "px"; })
         .style("width", function(d) { return Math.max(0, d.dx ) + "px"; })
         .style("height", function(d) { return Math.max(0, d.dy ) + "px"; });
       }
     }
+
     update(layoutInput);
 
     function changeIt() {
