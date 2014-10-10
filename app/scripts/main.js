@@ -78,7 +78,7 @@ var Isfahan = function(configObject) {
     root.dy = containerSize[1];
 
     calculateLayout(root);
-    isfahan.padding(2);
+    isfahan.padding(padding);
     nodes = nodes.map(function(node) {
       return merge(node, pad(node));
     });
