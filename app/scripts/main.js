@@ -32,34 +32,51 @@ var Isfahan = function(configObject) {
   }
 
   // Positions the specified row of nodes. Modifies `rect`.
-  function position(group, type, rect) {
-    console.log('%c\n'+' parent ' + type + ' rect is: ', 'background: #222; color: #EFEFEF; font-family: helvetica neue; font-size:20px; padding: 0 7px 3px 0;');
-    console.log(rect);
+  function position(group, groupType, rect) {
+    // console.log('%c\n'+' parent ' + groupType + ' rect is: ', 'background: #222; color: #EFEFEF; font-family: helvetica neue; font-size:20px; padding: 0 7px 3px 0;');
+    // console.log(rect);
     var i = -1,
+    row = (groupType === "row") ? false : true, // for ternary statements later, specifies whether that particular child is a row or not. Allows easy, centralised description of the parameter calculations that can be switched from row to column.
     n = group.length,
     x = rect.x,
     y = rect.y,
     o;
-    if (type === "column") { // vertical subdivision (children are rows)
-      console.log('\n'+'calculating child rows');
-      while (++i < n) {
-        o = group[n-(i+1)];
-        o.x = x;
-        o.y = y + (rect.dy/n) * i; 
-        o.dx = rect.dx;
-        o.dy = rect.dy/n;
-        console.log({x:o.x, y: o.y, width:o.dx, height: o.dy});
+    var offset = 0;
+    while (++i < n) {
+      o = group[n-(i+1)];
+      d = divisor(o, row, rect, group, n);
+      o.x = row ?  x : x + offset;
+      o.y = row ? y + offset : y;
+      o.dx = row ?  rect.dx : rect.dx/d;
+      o.dy = row ? rect.dy/d : rect.dy;
+      offset += row ? o.dy : o.dx;
+      // console.log({x:o.x, y: o.y, width:o.dx, height: o.dy});
+    }
+  }
+
+  function divisor(node, row, rect, group, n) {
+
+    var old = true,
+    dimension = row ? 'dy' : 'dx';
+    total = rect[dimension],
+    divisor;
+    // if not already set, divide equally.
+    group.forEach(function(item) {
+      if (item[dimension] === undefined) { 
+        old = false;
       }
-    } else { // horizontal subdivision (children are columns)
-      console.log('\n'+'calculating child columns');
-      while (++i < n) {
-        o = group[n-(i+1)];
-        o.x = x + (rect.dx/n) * i; 
-        o.y = y;
-        o.dx = rect.dx/n;
-        o.dy = rect.dy;
-        console.log({x:o.x, y: o.y, width:o.dx, height: o.dy});
-      }
+    });
+
+    if (old) {
+      var sum = group.reduce(
+        function(previousValue, currentValue, index, array) {
+        return previousValue[dimension] + currentValue[dimension];
+      });
+      
+      divisor = (node[dimension]/sum)*total;
+      return divisor;
+    } else {
+      return n;
     }
   }
 
