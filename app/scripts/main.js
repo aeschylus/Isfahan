@@ -1,10 +1,11 @@
 var Isfahan = function(configObject) {
   var _this = this,
 
-  containerSize = (function(containerId) {
+  containerSize = function(containerId) {
     return [document.getElementById(containerId).offsetWidth,
       document.getElementById(containerId).offsetHeight]
-  })(configObject.containerId),
+  },
+  containerId = configObject.containerId,
   pad = d3_layout_cellPadNull,
   round = Math.round,
   padding = configObject.padding,
@@ -43,27 +44,27 @@ var Isfahan = function(configObject) {
     o;
     var offset = 0;
     while (++i < n) {
-      o = group[n-(i+1)];
-      d = divisor(o, row, rect, group, n);
-      o.x = row ?  x : x + offset;
-      o.y = row ? y + offset : y;
-      o.dx = row ?  rect.dx : rect.dx/d;
-      o.dy = row ? rect.dy/d : rect.dy;
+      o = group[n-(i+1)],
+      d = divisor(o, row, rect, group, n),
+      o.x = row ?  x : x + offset,
+      o.y = row ? y + offset : y,
+      o.dx = row ? rect.dx : rect.dx/d,
+      o.dy = row ? rect.dy/d : rect.dy,
       offset += row ? o.dy : o.dx;
-      // console.log({x:o.x, y: o.y, width:o.dx, height: o.dy});
+      console.log({x:o.x, y: o.y, width:o.dx, height: o.dy});
     }
   }
 
   function divisor(node, row, rect, group, n) {
 
-    var old = true,
-    dimension = row ? 'dy' : 'dx';
+    var old = false,
+    dimension = row ? 'dy' : 'dx',
     total = rect[dimension],
     divisor;
     // if not already set, divide equally.
     group.forEach(function(item) {
-      if (item[dimension] === undefined) { 
-        old = false;
+      if (!item[dimension] === undefined) { 
+        old = true;
       }
     });
 
@@ -72,8 +73,10 @@ var Isfahan = function(configObject) {
         function(previousValue, currentValue, index, array) {
         return previousValue[dimension] + currentValue[dimension];
       });
+      console.log('sum: ' + sum);
       
       divisor = (node[dimension]/sum)*total;
+      console.log("divisor: "+divisor);
       return divisor;
     } else {
       return n;
@@ -91,8 +94,8 @@ var Isfahan = function(configObject) {
     })(configObject.containerSelector);
     root.x = 0;
     root.y = 0;
-    root.dx = containerSize[0];
-    root.dy = containerSize[1];
+    root.dx = containerSize(containerId)[0];
+    root.dy = containerSize(containerId)[1];
 
     calculateLayout(root);
     isfahan.padding(padding);

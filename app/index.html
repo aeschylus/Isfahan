@@ -98,6 +98,7 @@
     };
 
     var threeBythree = {
+      "type": "row",
       "children":[
         {
         "type":"column",
@@ -117,15 +118,12 @@
         "children":[
           {
           "type":"row",
-          "dy": 80
         },
         {
           "type":"row",
-          "dy": 20
         },
         {
           "type":"row",
-          "dy": 30
         }]
       },
       {
@@ -196,15 +194,6 @@
       "iconClass":"th-list"
     };
 
-
-    var w = window.innerWidth,
-    h = window.innerHeight,
-    color = d3.scale.category20c();
-
-    // var windowing = windowingSystem
-    // .size([w,h])
-    // .value(function(d) { return 1; });
-
     function update(data) {
       var windowingSystem = Isfahan({
         containerId: 'container',
@@ -215,13 +204,14 @@
 
       windowingSystem.forEach(function(item){
         item.id = Math.floor(Math.random()*20000);
-      })
+      });
 
       console.log('data before filter: ');
       console.log(data);
       data = windowingSystem.filter( function(d) {
         return !d.children;
       });
+
       console.log('data after filter: ');
       console.log(data);
 
@@ -237,16 +227,10 @@
       .call(cell);
 
       divs.exit()
-      .transition()
-      .duration(750)
-      .style('width', 0+'px')
-      .style('height', 0+'px')
       .remove("div");
 
       function cell() {
         this
-      .transition()
-        .duration(750)
         .style("left", function(d) { return d.x + "px"; })
         .style("top", function(d) { return d.y + "px"; })
         .style("width", function(d) { return Math.max(0, d.dx ) + "px"; })
@@ -254,13 +238,41 @@
       }
     }
 
-    update(layoutInput);
+    changeIt();
+
+    d3.select(window).on('resize', function(event) {
+      update(option);
+    })
 
     function changeIt() {
-      var options = [threeBythree, layoutInput, singleNested],
+      var options = [threeBythree, layoutInput, singleNested];
       option = options[Math.floor(Math.random() * 3)]; 
       update(option);
     }
+
+    // Mock API
+    
+    // load from serialised version
+
+    // Fill/address/empty the slot
+    // Just get the dom reference for
+    // an address of the grid system
+
+    // close area by address or id
+    
+    // insert new area by address
+    // left/right split, top/bottom split 
+
+    // serialise contents/layout
+
+    // resize a sub-slot
+
+    // fix rounding errors
+
+    // UI layer has ugly code
+
+    // re-eveluate styling hooks
+
   </script>
   <!-- endbuild -->
 </body>
