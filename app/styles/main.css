@@ -10,6 +10,11 @@ body, html {
 body {
     padding:2px;
 }
+input {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
 
 .hero-unit {
     margin: 50px auto 0 auto;
@@ -40,7 +45,7 @@ body {
   width: 100%;
   /* border: 2px solid orangered; */
   /* box-sizing: border-box; */
-  position: relative;
+  position: absolute;
 }
 
 .tileWindow {
