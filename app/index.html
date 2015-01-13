@@ -25,7 +25,6 @@
   </div>
   <input type="range" min="1" max="400" value="100">
 
-
   <!-- build:js scripts/vendor.js -->
   <!-- bower:js -->
   <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -96,6 +95,31 @@
         }]
       }
       ]
+    };
+
+    var oneBytwo = {
+      'type': 'row',
+      'children': [
+        {
+        'type': 'column'
+      },
+      {
+        'type': 'column'
+      }]
+    };    
+
+    var oneByThree = {
+      'type': 'row',
+      'children': [
+        {
+        'type': 'column'
+      },
+      {
+        'type': 'column'
+      },
+      {
+        'type': 'column'
+      }]
     };
 
     var threeBythree = {
@@ -195,7 +219,7 @@
       "iconClass":"th-list"
     };
 
-    function update(data) {
+    function update(data, animate) {
       var windowingSystem = Isfahan({
         containerId: 'container',
         layoutDescription: data,
@@ -213,16 +237,30 @@
       console.log(data);
 
       // Data Join.
-      var divs = d3.select("#container").selectAll("div")
-      .data(data, function(d) { return d.id; });
+      var divs = d3.select("#container").selectAll("div.tileWindow")
+      .data(data, function(d) {console.log(d); return d.id; });
 
-      divs.call(cell);
-
+      // Update
+      if (animate) {
+        divs.transition()
+        .duration(300).call(cell);
+      } else {
+        divs.call(cell);
+      }
+      
       // Enter
-      divs.enter().append("div")
-      .attr("class", "tileWindow")
-      .call(cell);
+      if (animate) {
+        divs.enter().append("div")
+        .attr("class", "tileWindow")
+        .transition().duration(300)
+        .call(cell);
+      } else {
+        divs.enter().append("div")
+        .attr("class", "tileWindow")
+        .call(cell);
+      }
 
+      // Exit
       divs.exit()
       .remove("div");
 
@@ -235,16 +273,21 @@
       }
     }
 
-    changeIt();
-
     d3.select(window).on('resize', function(event) {
-      update(option);
+      update(option, false);
     })
 
-    function changeIt() {
+    function changeIt(animate) {
       var options = [threeBythree, layoutInput, singleNested];
       option = options[Math.floor(Math.random() * 3)]; 
-      update(option);
+      update(option, true);
+    }
+
+    update(oneBytwo, false);
+
+    function setOption(layoutName) {
+      option = layoutName;
+      update(option, true);
     }
 
     var input = document.getElementsByTagName("input")[0];
@@ -256,7 +299,7 @@
       console.log('resizing slot');
     }
     // Mock API
-    
+
     // load from serialised version
 
     // Fill/address/empty the slot
@@ -264,7 +307,7 @@
     // an address of the grid system
 
     // close area by address or id
-    
+
     // insert new area by address
     // left/right split, top/bottom split 
 
@@ -276,7 +319,7 @@
 
     // UI layer has ugly code
 
-    // re-eveluate styling hooks
+    // re-evaluate styling hooks
 
   </script>
   <!-- endbuild -->
