@@ -51,6 +51,7 @@ var Isfahan = function(configObject) {
     while (++i < n) {
       o = group[n-(i+1)],
       d = divisor(o, row, rect, group, n),
+      o.id = o.id ? o.id : genUuid(),
       o.x = row ?  x : x + offset,
       o.y = row ? y + offset : y,
       o.dx = row ? rect.dx : rect.dx/d,
@@ -68,12 +69,13 @@ var Isfahan = function(configObject) {
     divisor;
     // if not already set, divide equally.
     group.forEach(function(item) {
-      if (!item[dimension] === undefined) { 
+      if (!(item[dimension] === undefined)) { 
         old = true;
       }
     });
 
     if (old) {
+      console.log('preserved');
       var sum = group.reduce(
         function(previousValue, currentValue, index, array) {
         return previousValue[dimension] + currentValue[dimension];
@@ -103,8 +105,6 @@ var Isfahan = function(configObject) {
     root.dy = containerSize(containerId)[1];
     root.address = root.type + "1";
     root.id = genUuid();
-
-    console.log(genUuid());
 
     calculateLayout(root);
     isfahan.padding(padding);

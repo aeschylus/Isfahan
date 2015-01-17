@@ -238,7 +238,7 @@
 
       // Data Join.
       var divs = d3.select("#container").selectAll("div.tileWindow")
-      .data(data, function(d) {console.log(d); return d.id; });
+      .data(data, function(d) {console.log(d); return d.address; });
 
       // Update
       if (animate) {
