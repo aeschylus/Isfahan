@@ -69,7 +69,7 @@ var Isfahan = function(configObject) {
     divisor;
     // if not already set, divide equally.
     group.forEach(function(item) {
-      if (!(item[dimension] === undefined)) { 
+      if (!item[dimension] === undefined) { 
         old = true;
       }
     });
