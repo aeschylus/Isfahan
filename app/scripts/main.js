@@ -51,7 +51,7 @@ var Isfahan = function(configObject) {
     while (++i < n) {
       o = group[n-(i+1)],
       d = divisor(o, row, rect, group, n),
-      o.id = o.id ? o.id : genUuid(),
+      o.id = typeof o.id !== 'undefined' ? o.id : genUuid(),
       o.x = row ?  x : x + offset,
       o.y = row ? y + offset : y,
       o.dx = row ? rect.dx : rect.dx/d,
