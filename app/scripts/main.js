@@ -31,7 +31,6 @@ var Isfahan = function(configObject) {
       position(group, node.type, rect);
       children.forEach(function(child, index) {
         child.address = node.address.concat("." + child.type + (index + 1));
-        child.id = genUuid();
       })
       children.forEach(calculateLayout);
     }
