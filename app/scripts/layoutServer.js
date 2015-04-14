@@ -1,5 +1,8 @@
 $.layoutServer = function(options) {
 
+  // use strict, and do not use extend,
+  // which makes array watching impossible. 
+  // remove jquery
   jQuery.extend(true, this, {
     workspaceSlotCls: 'slot',
     focusedSlot:      null,
@@ -9,42 +12,17 @@ $.layoutServer = function(options) {
     parent:           null,
     layoutDescription:    null
   }, options);
-
+  // this class should be parametrisable
   this.element  = this.element || jQuery('<div class="workspace-container" id="workspace">');
   this.init();
-
 };
 
 $.layoutServer.prototype = {
   init: function () {
     this.element.appendTo(this.appendTo);
-    if (this.type === "none") {
-      this.parent.toggleSwitchWorkspace();
-      return;
-    }
-
     this.calculateLayout();
-
     this.bindEvents();
   },
-
-  get: function(prop, parent) {
-    if (parent) {
-      return this[parent][prop];
-    }
-    return this[prop];
-  },
-
-  set: function(prop, value, options) {
-    var _this = this;
-    if (options) {
-      this[options.parent][prop] = value;
-    } else {
-      this[prop] = value;
-    }
-    jQuery.publish(prop + '.set', value);
-  },
-
   calculateLayout: function(resetting) {
     var _this = this,
     layout;
@@ -67,6 +45,9 @@ $.layoutServer.prototype = {
     // Implicitly updates the existing elements.
     // Must come before the enter function.
     divs.call(cell).each(function(d) {
+      // make the contents of this each function parametrisable.
+
+      // store slots separately?
       _this.slots.forEach(function(slot) {
         if (slot.slotID === d.id) {
           slot.layoutAddress = d.address;
@@ -80,6 +61,10 @@ $.layoutServer.prototype = {
     .attr("data-layout-slot-id", function(d) { return d.id; })
     .call(cell)
     .each(function(d) {
+      // make the contents of this each function a paramter.
+      // find a way to support similar behaviour without referring 
+      // to mirador-specific notions like "slots" as distinct from
+      // windows.
       var appendTo = _this.element.children('div').filter('[data-layout-slot-id="'+ d.id+'"]')[0];
       _this.slots.push(new $.Slot({
         slotID: d.id,
@@ -351,35 +336,17 @@ $.layoutServer.prototype = {
       _this.calculateLayout();
     });
 
-    jQuery.subscribe('manifestQueued', function(event, manifestPromise) {
-      // Trawl windowObjects preemptively for slotAddresses and
-      // notify those slots to display a "loading" state.
-      // Similar to the operation of the manifestLoadStatusIndicator
-      // and its associated manifestList controller.
-      var targetSlot;
-
-      if (_this.parent.windowObjects) {
-        var check = _this.parent.windowObjects.forEach(function(windowConfig, index) {
-          // windowConfig.slotAddress will give the slot;
-          // change the state on that slot to be "loading"
-          if (windowConfig.slotAddress) {
-            targetSlot = _this.getSlotFromAddress(windowConfig.slotAddress);
-          } else {
-            targetSlot = _this.focusedSlot || _this.slots.filter(function(slot) {
-              return slot.hasOwnProperty('window') ? true : false;
-            })[0];
-          }
-        });
-      }
-    });
-
-    jQuery.subscribe('windowRemoved', function(windowId) {
-      var remove = _this.windows.map(function(window) {
-        return window.id !== windowId;
-      })[0],
-      spliceIndex = _this.windows.indexOf(remove);
-      _this.windows.splice(spliceIndex, 0);
-    });
+    // Is this needed at all, or is some alternative 
+    // strategy required which supports similar
+    // functionality in a more general, non-mirador-specific way?
+    //
+    // jQuery.subscribe('windowRemoved', function(windowId) {
+    //   var remove = _this.windows.map(function(window) {
+    //     return window.id !== windowId;
+    //   })[0],
+    //   spliceIndex = _this.windows.indexOf(remove);
+    //   _this.windows.splice(spliceIndex, 0);
+    // });
   },
 
   clearSlot: function(slotId) {
@@ -395,6 +362,9 @@ $.layoutServer.prototype = {
   },
 
   addWindow: function(windowConfig) {
+    // Alll of this is Mirador specific. How 
+    // can it be adapted to be of general use.
+    //
     // Windows can be added from a config,
     // from a saved state, (in both those cases they are in the form of "windowObjects")
     // from the workspace windows list after a grid layout change,
