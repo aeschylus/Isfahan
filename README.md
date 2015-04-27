@@ -18,8 +18,7 @@ Isfahan is a javascript library, based on d3.js, for creating tiling window envi
 The best way to contribute to Isfahan is by starting with the example project provided by the library. The following assumes you have completed the installation instructions above:
 
 * Change into the examples directory: `cd Isfahan/examples`
-* Run `gulp watch &` to reload build as files are modified (& runs in background)
-* Run SimpleHTTPServer within the examples directory: `python -m SimpleHTTPServer`
+* Run `./run.sh` (requires Python) which performs the next two steps:
+* Run `gulp watch &` to rebuild as files are modified (& runs in background)
+* Point a webserver to the examples directory, e.g. SimpleHTTPServer: `python -m SimpleHTTPServer`
 * Point your browser to: `<your-browser> localhost:8000`
-
-
