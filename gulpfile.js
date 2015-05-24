@@ -74,4 +74,4 @@ gulp.task('test', ['lint', 'istanbul']);
 
 gulp.task('release', ['bump']);
 
-gulp.task('default', ['test', 'browserify']);
+gulp.task('default', ['browserify', 'test']);
